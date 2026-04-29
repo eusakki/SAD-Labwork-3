@@ -3,7 +3,7 @@ using AntiCafe.DAL.Entities;
 
 namespace AntiCafe.DAL.UnitOfWork
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         IRepository<Room> Rooms { get; }
         IRepository<Booking> Bookings { get; }

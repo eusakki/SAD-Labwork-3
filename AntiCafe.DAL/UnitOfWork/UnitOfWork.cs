@@ -25,10 +25,5 @@ namespace AntiCafe.DAL.UnitOfWork
         {
             return await context.SaveChangesAsync();
         }
-
-        public void Dispose()
-        {
-            context.Dispose();
-        }
     }
 }

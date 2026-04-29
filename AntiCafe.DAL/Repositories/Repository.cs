@@ -30,16 +30,6 @@ namespace AntiCafe.DAL.Repositories
             await dbSet.AddAsync(entity);
         }
 
-        public void Update(T entity)
-        {
-            dbSet.Update(entity);
-        }
-
-        public void Delete(T entity)
-        {
-            dbSet.Remove(entity);
-        }
-
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await dbSet.Where(predicate).ToListAsync();
