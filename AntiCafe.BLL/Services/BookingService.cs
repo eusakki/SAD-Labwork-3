@@ -39,6 +39,45 @@ namespace AntiCafe.BLL.Services
 
             var booking = mapper.Map<Booking>(bookingDto);
 
+            booking.Activities = new List<Activity>();
+
+            if (bookingDto.IsFullService)
+            {
+                var AllACtivities = await uow.Activities.GetAllAsync();
+
+                var random = new Random();
+
+                int totalAvailable = AllACtivities.Count();
+                int maxToTake = Math.Min(5, totalAvailable + 1);
+
+                int countToTake = random.Next(2, maxToTake);
+                var randomActivities = AllACtivities
+                    .OrderBy(x => random.Next())
+                    .Take(countToTake)
+                    .ToList();
+
+                foreach (var activity in randomActivities)
+                {
+                    booking.Activities.Add(activity);
+                }
+            }
+            else
+            {
+                if (bookingDto.Activities == null || !bookingDto.Activities.Any())
+                    throw new Exception("You must select at least one activity.");
+
+                var allActivities = await uow.Activities.GetAllAsync();
+
+                foreach (var dtoActivity in bookingDto.Activities)
+                {
+                    var trackedActivity = allActivities.FirstOrDefault(a => a.Name == dtoActivity.Name);
+                    if (trackedActivity != null)
+                    {
+                        booking.Activities.Add(trackedActivity);
+                    }
+                }
+            }
+
             await uow.Bookings.AddAsync(booking);
             await uow.SaveAsync();
         }

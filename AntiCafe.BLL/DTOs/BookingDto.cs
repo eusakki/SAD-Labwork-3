@@ -9,5 +9,7 @@
         public DateTime EndTime { get; set; }
 
         public bool IsFullService { get; set; }
+
+        public List<ActivityDto> Activities { get; set; } = new();
     }
 }

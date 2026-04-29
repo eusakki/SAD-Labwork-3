@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36109.1 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.PL", "AntiCafe.PL\AntiCafe.PL.csproj", "{D47E3795-AB34-4347-92F8-C4BD51F4C83D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.BLL", "AntiCafe.BLL\AntiCafe.BLL.csproj", "{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.DAL", "AntiCafe.DAL\AntiCafe.DAL.csproj", "{4CBA2FB6-17DD-4F5A-81D3-B6E6EBB135B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D47E3795-AB34-4347-92F8-C4BD51F4C83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D47E3795-AB34-4347-92F8-C4BD51F4C83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D47E3795-AB34-4347-92F8-C4BD51F4C83D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBA2FB6-17DD-4F5A-81D3-B6E6EBB135B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBA2FB6-17DD-4F5A-81D3-B6E6EBB135B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBA2FB6-17DD-4F5A-81D3-B6E6EBB135B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBA2FB6-17DD-4F5A-81D3-B6E6EBB135B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

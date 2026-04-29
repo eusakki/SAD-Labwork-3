@@ -11,5 +11,7 @@
         public DateTime EndTime { get; set; }
 
         public bool IsFullService { get; set; }
+
+        public List<Activity> Activities { get; set; } = new();
     }
 }
