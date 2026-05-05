@@ -29,6 +29,12 @@ namespace AntiCafe.BLL.Services
 
         public async Task CreateBookingAsync(BookingDto bookingDto)
         {
+            if (bookingDto.StartTime >= bookingDto.EndTime)
+                throw new Exception("Start time must be before end time.");
+
+            if (bookingDto.StartTime < DateTime.Now)
+                throw new Exception("Start time cannot be in the past.");
+
             bool available = await IsRoomAvailable(
                 bookingDto.RoomId,
                 bookingDto.StartTime,
@@ -43,23 +49,7 @@ namespace AntiCafe.BLL.Services
 
             if (bookingDto.IsFullService)
             {
-                var AllACtivities = await uow.Activities.GetAllAsync();
-
-                var random = new Random();
-
-                int totalAvailable = AllACtivities.Count();
-                int maxToTake = Math.Min(5, totalAvailable + 1);
-
-                int countToTake = random.Next(2, maxToTake);
-                var randomActivities = AllACtivities
-                    .OrderBy(x => random.Next())
-                    .Take(countToTake)
-                    .ToList();
-
-                foreach (var activity in randomActivities)
-                {
-                    booking.Activities.Add(activity);
-                }
+                booking.Activities = await GetRandomActivitiesAsync();
             }
             else
             {
@@ -86,6 +76,21 @@ namespace AntiCafe.BLL.Services
         {
             var bookings = await uow.Bookings.GetAllAsync();
             return mapper.Map<IEnumerable<BookingDto>>(bookings);
+        }
+
+        private async Task<List<Activity>> GetRandomActivitiesAsync()
+        {
+            var AllACtivities = await uow.Activities.GetAllAsync();
+            var random = new Random();
+
+            int totalAvailable = AllACtivities.Count();
+            int maxToTake = Math.Min(5, totalAvailable + 1);
+
+            int countToTake = random.Next(2, maxToTake);
+            return AllACtivities
+                .OrderBy(x => random.Next())
+                .Take(countToTake)
+                .ToList();
         }
     }
 }
