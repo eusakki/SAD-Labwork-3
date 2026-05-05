@@ -9,5 +9,11 @@ namespace AntiCafe.BLL.Interfaces
         Task CreateBookingAsync(BookingDto booking);
 
         Task<IEnumerable<BookingDto>> GetBookingsAsync();
+
+        Task<BookingDto> GetByIdAsync(int id);
+
+        Task UpdateBookingAsync(int id, BookingDto dto);
+
+        Task DeleteBookingAsync(int id);
     }
 }

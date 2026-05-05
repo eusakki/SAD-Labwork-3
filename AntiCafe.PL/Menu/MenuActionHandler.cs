@@ -34,7 +34,7 @@ namespace AntiCafe.PL.Menu
             Console.WriteLine("\nBookings:");
             foreach (var b in bookings)
             {
-                Console.Write($"Room {b.RoomId}: {b.StartTime} - {b.EndTime} | FullService: {b.IsFullService} | ");
+                Console.Write($"{b.Id}. Room {b.RoomId}: {b.StartTime} - {b.EndTime} | FullService: {b.IsFullService} | ");
                 if (b.Activities != null && b.Activities.Any())
                 {
                     Console.Write("Activities:");
@@ -115,6 +115,97 @@ namespace AntiCafe.PL.Menu
             catch (FormatException)
             {
                 Console.WriteLine("\n Error: Invalid input format. Please enter numbers and dates correctly.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public async Task UpdateBooking()
+        {
+            try
+            {
+                Console.Write("Enter Booking Id to update: ");
+                int id = int.Parse(Console.ReadLine());
+
+                var existing = await bookingService.GetByIdAsync(id);
+
+                if (existing == null)
+                {
+                    Console.WriteLine("Booking not found.");
+                    return;
+                }
+
+                Console.Write("New Start (yyyy-MM-dd HH:mm): ");
+                DateTime start = DateTime.Parse(Console.ReadLine());
+
+                Console.Write("New End (yyyy-MM-dd HH:mm): ");
+                DateTime end = DateTime.Parse(Console.ReadLine());
+
+                Console.Write("Full service? (y/n): ");
+                bool isFullService = Console.ReadLine()?.ToLower() == "y";
+
+                var activities = new List<ActivityDto>();
+
+                if (!isFullService)
+                {
+                    while (true)
+                    {
+                        Console.WriteLine("\nChoose activity:");
+                        Console.WriteLine("1. Movie");
+                        Console.WriteLine("2. Sport");
+                        Console.WriteLine("3. Board Games");
+                        Console.WriteLine("4. Console Games");
+                        Console.Write("Your choice: ");
+
+                        int choice = int.Parse(Console.ReadLine());
+
+                        string activity = choice switch
+                        {
+                            1 => "Movie",
+                            2 => "Sport",
+                            3 => "Board Games",
+                            4 => "Console Games",
+                            _ => throw new Exception("Invalid activity choice.")
+                        };
+
+                        if (!activities.Any(a => a.Name == activity))
+                            activities.Add(new ActivityDto { Name = activity });
+
+                        Console.Write("Add more activities? (y/n): ");
+                        if (Console.ReadLine()?.ToLower() != "y")
+                            break;
+                    }
+                }
+
+                await bookingService.UpdateBookingAsync(id, new BookingDto
+                {
+                    RoomId = existing.RoomId,
+                    StartTime = start,
+                    EndTime = end,
+                    IsFullService = isFullService,
+                    Activities = activities
+                });
+
+                Console.WriteLine("Booking updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public async Task DeleteBooking()
+        {
+            try
+            {
+                Console.Write("Enter Booking Id to delete: ");
+                int id = int.Parse(Console.ReadLine());
+
+                await bookingService.DeleteBookingAsync(id);
+
+                Console.WriteLine("Booking deleted successfully!");
             }
             catch (Exception ex)
             {

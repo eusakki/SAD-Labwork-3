@@ -78,6 +78,77 @@ namespace AntiCafe.BLL.Services
             return mapper.Map<IEnumerable<BookingDto>>(bookings);
         }
 
+        public async Task<BookingDto> GetByIdAsync(int id)
+        {
+            var booking = await uow.Bookings.GetByIdAsync(id);
+            return mapper.Map<BookingDto>(booking);
+        }
+
+        public async Task UpdateBookingAsync(int id, BookingDto dto)
+        {
+            var entity = await uow.Bookings.GetByIdAsync(id);
+
+            if (entity == null)
+                throw new Exception("Booking not found.");
+
+            if (dto.StartTime >= dto.EndTime)
+                throw new Exception("Start time must be before end time.");
+
+            if (dto.StartTime < DateTime.Now)
+                throw new Exception("Start time cannot be in the past.");
+
+            bool available = await IsRoomAvailable(
+                dto.RoomId, 
+                dto.StartTime, 
+                dto.EndTime);
+
+            if (!available)
+                throw new Exception("Room is not available in this time.");
+
+            entity.RoomId = dto.RoomId;
+            entity.StartTime = dto.StartTime;
+            entity.EndTime = dto.EndTime;
+            entity.IsFullService = dto.IsFullService;
+
+            entity.Activities.Clear();
+
+            if (dto.IsFullService)
+            {
+                var activities = await GetRandomActivitiesAsync();
+                entity.Activities = activities;
+            }
+            else
+            {
+                if (dto.Activities == null || !dto.Activities.Any())
+                    throw new Exception("You must select at least one activity.");
+
+                var allActivities = await uow.Activities.GetAllAsync();
+
+                foreach (var dtoActivity in dto.Activities)
+                {
+                    var activity = allActivities.FirstOrDefault(a => a.Name == dtoActivity.Name);
+                    if (activity != null)
+                        entity.Activities.Add(activity);
+                }
+            }
+
+            uow.Bookings.Update(entity);
+            await uow.SaveAsync();
+        }
+
+        public async Task DeleteBookingAsync(int id)
+        {
+            var entity = await uow.Bookings.GetByIdAsync(id);
+
+            if (entity == null)
+                throw new Exception("Booking not found.");
+
+            entity.Activities.Clear();
+
+            uow.Bookings.Delete(entity);
+            await uow.SaveAsync();
+        }
+
         private async Task<List<Activity>> GetRandomActivitiesAsync()
         {
             var AllACtivities = await uow.Activities.GetAllAsync();

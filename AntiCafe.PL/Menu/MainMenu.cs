@@ -17,7 +17,9 @@
                 Console.WriteLine("1. Show rooms");
                 Console.WriteLine("2. Show bookings");
                 Console.WriteLine("3. Create booking");
-                Console.WriteLine("4. Show all avaliable activities in the cafe");
+                Console.WriteLine("4. Update booking");
+                Console.WriteLine("5. Delete booking");
+                Console.WriteLine("6. Show all avaliable activities in the cafe");
                 Console.WriteLine("0. Exit");
                 Console.Write("Select an option: ");
 
@@ -35,6 +37,12 @@
                         await actionHandler.CreateBooking();
                         break;
                     case "4":
+                        await actionHandler.UpdateBooking();
+                        break;
+                    case "5":
+                        await actionHandler.DeleteBooking();
+                        break;
+                    case "6":
                         await actionHandler.ShowActivities();
                         break;
                     case "0":
