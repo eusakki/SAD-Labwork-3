@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using AntiCafe.DAL.Data;
-using AntiCafe.DAL.UnitOfWork;
-using AntiCafe.BLL.Services;
-using AntiCafe.BLL.Interfaces;
-using AntiCafe.BLL.Mapping;
 using AntiCafe.PL.Menu;
-using AntiCafe.PL.Data;
 
 namespace AntiCafe.PL
 {

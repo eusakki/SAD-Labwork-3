@@ -1,7 +1,7 @@
 ﻿using AntiCafe.DAL.Entities;
 using AntiCafe.DAL.UnitOfWork;
 
-namespace AntiCafe.PL.Data
+namespace AntiCafe.DAL.Data
 {
     public static class DataSeeder
     {

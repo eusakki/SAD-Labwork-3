@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.PL", "AntiCafe.PL\AntiCafe.PL.csproj", "{D47E3795-AB34-4347-92F8-C4BD51F4C83D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.ConsoleMenu", "AntiCafe.PL\AntiCafe.ConsoleMenu.csproj", "{D47E3795-AB34-4347-92F8-C4BD51F4C83D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.BLL", "AntiCafe.BLL\AntiCafe.BLL.csproj", "{9ED27C02-5786-4BD5-9F7A-710F7A4D621B}"
 EndProject

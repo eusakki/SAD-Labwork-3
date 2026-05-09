@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using AntiCafe.BLL.DTOs;
 using AntiCafe.BLL.Interfaces;
 using AntiCafe.DAL.Entities;
 using AntiCafe.DAL.UnitOfWork;
+using AntiCafe.DAL.Data;
 
 namespace AntiCafe.BLL.Services
 {
@@ -10,11 +12,13 @@ namespace AntiCafe.BLL.Services
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
+        private readonly AntiCafeDbContext context;
 
-        public BookingService(IUnitOfWork uow, IMapper mapper)
+        public BookingService(IUnitOfWork uow, IMapper mapper, AntiCafeDbContext context)
         {
             this.uow = uow;
             this.mapper = mapper;
+            this.context = context;
         }
 
         public async Task<bool> IsRoomAvailable(int roomId, DateTime start, DateTime end)
@@ -74,13 +78,19 @@ namespace AntiCafe.BLL.Services
 
         public async Task<IEnumerable<BookingDto>> GetBookingsAsync()
         {
-            var bookings = await uow.Bookings.GetAllAsync();
+            var bookings = await context.Bookings
+                .Include(b => b.Activities)
+                .ToListAsync();
+
             return mapper.Map<IEnumerable<BookingDto>>(bookings);
         }
 
         public async Task<BookingDto> GetByIdAsync(int id)
         {
-            var booking = await uow.Bookings.GetByIdAsync(id);
+            var booking = await context.Bookings
+                .Include(b => b.Activities)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
             return mapper.Map<BookingDto>(booking);
         }
 
