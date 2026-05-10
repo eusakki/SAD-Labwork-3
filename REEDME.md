@@ -123,7 +123,7 @@ classDiagram
 ```
 
 ---
-## Digram 5. Data Access Layer
+## Diagram 5. Data Access Layer
 
 ```mermaid
 classDiagram
@@ -176,7 +176,7 @@ classDiagram
 ```
 
 ---
-## Digram 6. Contracts (DTO)
+## Diagram 6. Contracts (DTO)
 
 ```mermaid
 classDiagram
