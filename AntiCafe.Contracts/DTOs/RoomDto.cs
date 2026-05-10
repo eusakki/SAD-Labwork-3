@@ -1,4 +1,4 @@
-﻿namespace AntiCafe.BLL.DTOs
+﻿namespace AntiCafe.Contracts.DTOs
 {
     public class RoomDto
     {

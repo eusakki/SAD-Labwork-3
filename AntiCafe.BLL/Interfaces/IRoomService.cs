@@ -1,4 +1,4 @@
-﻿using AntiCafe.BLL.DTOs;
+﻿using AntiCafe.Contracts.DTOs;
 
 namespace AntiCafe.BLL.Interfaces
 {

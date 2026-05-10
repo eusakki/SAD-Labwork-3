@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using AntiCafe.BLL.DTOs;
+using AntiCafe.Contracts.DTOs;
 using AntiCafe.BLL.Interfaces;
 using AntiCafe.DAL.UnitOfWork;
 

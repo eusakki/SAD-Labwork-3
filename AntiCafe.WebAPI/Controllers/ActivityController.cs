@@ -4,7 +4,7 @@ using AntiCafe.BLL.Interfaces;
 namespace AntiCafe.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/activities")]
     public class ActivityController : ControllerBase
     {
         private readonly IActivityService activityService;

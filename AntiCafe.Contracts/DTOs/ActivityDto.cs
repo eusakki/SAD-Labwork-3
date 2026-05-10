@@ -1,6 +1,4 @@
-﻿using AntiCafe.DAL.Entities;
-
-namespace AntiCafe.BLL.DTOs
+﻿namespace AntiCafe.Contracts.DTOs
 {
     public class ActivityDto
     {

@@ -1,4 +1,4 @@
-﻿namespace AntiCafe.PL.Menu
+﻿namespace AntiCafe.ConsoleMenu.Menu
 {
     public class MainMenu
     {

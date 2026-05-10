@@ -1,41 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using AntiCafe.PL.Menu;
+﻿using AntiCafe.ConsoleMenu.ApiClients;
+using AntiCafe.ConsoleMenu.Menu;
 
-namespace AntiCafe.PL
+namespace AntiCafe.ConsoleMenu
 {
     class Program
     {
         static async Task Main()
         {
-            var options = new DbContextOptionsBuilder<AntiCafeDbContext>()
-                .UseInMemoryDatabase("AntiCafeDB")
-                .Options;
+            var httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri("https://localhost:7187/api/")
+            };
 
-            var context = new AntiCafeDbContext(options);
-            var uow = new UnitOfWork(context);
-
-            // Seed initial data
-            await DataSeeder.SeedAsync(uow);
-
-            // AutoMapper configuration
-            var mapperConfig = new MapperConfiguration(cfg =>
-                cfg.AddProfile<MappingProfile>());
-            var mapper = mapperConfig.CreateMapper();
-
-            // Services initialization
-            IRoomService roomService = new RoomService(uow, mapper);
-            IBookingService bookingService = new BookingService(uow, mapper);
-            IActivityService activityService = new ActivityService(uow, mapper);
+            var roomClient = new RoomApiClient(httpClient);
+            var bookingClient = new BookingApiClient(httpClient);
+            var activityClient = new ActivityApiClient(httpClient);
 
             // Menu initialization with services
             var actionHandler = new MenuActionHandler(
-                roomService,
-                bookingService,
-                activityService);
+                roomClient,
+                bookingClient,
+                activityClient);
 
             // Run the main menu
-            var menu = new MainMenu(actionHandler);          
+            var menu = new MainMenu(actionHandler);
             await menu.Run();
         }
     }

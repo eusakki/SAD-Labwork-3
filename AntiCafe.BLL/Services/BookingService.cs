@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using AntiCafe.BLL.DTOs;
+using AntiCafe.Contracts.DTOs;
 using AntiCafe.BLL.Interfaces;
 using AntiCafe.DAL.Entities;
 using AntiCafe.DAL.UnitOfWork;
@@ -21,10 +21,11 @@ namespace AntiCafe.BLL.Services
             this.context = context;
         }
 
-        public async Task<bool> IsRoomAvailable(int roomId, DateTime start, DateTime end)
+        public async Task<bool> IsRoomAvailable(int roomId, DateTime start, DateTime end, int? excludeBookingId = null)
         {
             var bookings = await uow.Bookings.FindAsync(b =>
                 b.RoomId == roomId &&
+                (excludeBookingId == null || b.Id != excludeBookingId) &&
                 !(end <= b.StartTime || start >= b.EndTime)
             );
 
@@ -93,10 +94,12 @@ namespace AntiCafe.BLL.Services
 
             return mapper.Map<BookingDto>(booking);
         }
-
+        
         public async Task UpdateBookingAsync(int id, BookingDto dto)
         {
-            var entity = await uow.Bookings.GetByIdAsync(id);
+            var entity = await context.Bookings
+                .Include(b => b.Activities)
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (entity == null)
                 throw new Exception("Booking not found.");
@@ -110,7 +113,8 @@ namespace AntiCafe.BLL.Services
             bool available = await IsRoomAvailable(
                 dto.RoomId, 
                 dto.StartTime, 
-                dto.EndTime);
+                dto.EndTime,
+                id);
 
             if (!available)
                 throw new Exception("Room is not available in this time.");
@@ -124,8 +128,13 @@ namespace AntiCafe.BLL.Services
 
             if (dto.IsFullService)
             {
-                var activities = await GetRandomActivitiesAsync();
-                entity.Activities = activities;
+                var randomActivities = await GetRandomActivitiesAsync();
+
+                foreach (var act in randomActivities)
+                {
+                    var attached = await uow.Activities.GetByIdAsync(act.Id);
+                    entity.Activities.Add(attached);
+                }
             }
             else
             {
@@ -136,13 +145,14 @@ namespace AntiCafe.BLL.Services
 
                 foreach (var dtoActivity in dto.Activities)
                 {
-                    var activity = allActivities.FirstOrDefault(a => a.Name == dtoActivity.Name);
+                    var activity = allActivities
+                        .FirstOrDefault(a => a.Name == dtoActivity.Name);
+
                     if (activity != null)
                         entity.Activities.Add(activity);
                 }
             }
 
-            uow.Bookings.Update(entity);
             await uow.SaveAsync();
         }
 

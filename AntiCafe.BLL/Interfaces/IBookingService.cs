@@ -1,10 +1,10 @@
-﻿using AntiCafe.BLL.DTOs;
+﻿using AntiCafe.Contracts.DTOs;
 
 namespace AntiCafe.BLL.Interfaces
 {
     public interface IBookingService
     {
-        Task<bool> IsRoomAvailable(int roomId, DateTime start, DateTime end);
+        Task<bool> IsRoomAvailable(int roomId, DateTime start, DateTime end, int? excludeBookingId = null);
 
         Task CreateBookingAsync(BookingDto booking);
 

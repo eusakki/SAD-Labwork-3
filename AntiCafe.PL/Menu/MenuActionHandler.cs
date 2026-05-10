@@ -1,27 +1,27 @@
-﻿using AntiCafe.BLL.DTOs;
-using AntiCafe.BLL.Interfaces;
+﻿using AntiCafe.ConsoleMenu.ApiClients;
+using AntiCafe.Contracts.DTOs;
 
-namespace AntiCafe.PL.Menu
+namespace AntiCafe.ConsoleMenu.Menu
 {
     public class MenuActionHandler
     {
-        private readonly IRoomService roomService;
-        private readonly IBookingService bookingService;
-        private readonly IActivityService activityService;
+        private readonly RoomApiClient roomClient;
+        private readonly BookingApiClient bookingClient;
+        private readonly ActivityApiClient activityClient;
 
         public MenuActionHandler(
-            IRoomService roomService,
-            IBookingService bookingService,
-            IActivityService activityService)
+            RoomApiClient roomClient,
+            BookingApiClient bookingClient,
+            ActivityApiClient activityClient)
         {
-            this.roomService = roomService;
-            this.bookingService = bookingService;
-            this.activityService = activityService;
+            this.roomClient = roomClient;
+            this.bookingClient = bookingClient;
+            this.activityClient = activityClient;
         }
 
         public async Task ShowRooms()
         {
-            var rooms = await roomService.GetAllRoomsAsync();
+            var rooms = await roomClient.GetAllRoomsAsync();
             Console.WriteLine("\nRooms:");
             foreach (var r in rooms)
                 Console.WriteLine($"{r.Id}: {r.Name} (Capacity: {r.Capacity})");
@@ -29,7 +29,7 @@ namespace AntiCafe.PL.Menu
 
         public async Task ShowBookings()
         {
-            var bookings = await bookingService.GetBookingsAsync();
+            var bookings = await bookingClient.GetAllBookingsAsync();
 
             Console.WriteLine("\nBookings:");
             foreach (var b in bookings)
@@ -68,40 +68,9 @@ namespace AntiCafe.PL.Menu
                 Console.Write("Full service? (y/n): ");
                 bool isFullService = Console.ReadLine()?.ToLower() == "y";
 
-                var activities = new List<ActivityDto>();
+                var activities = isFullService ? new List<ActivityDto>() : ChooseActivities();
 
-                if (!isFullService)
-                {
-                    while (true)
-                    {
-                        Console.WriteLine("\nChoose activity:");
-                        Console.WriteLine("1. Movie");
-                        Console.WriteLine("2. Sport");
-                        Console.WriteLine("3. Board Games");
-                        Console.WriteLine("4. Console Games");
-                        Console.Write("Your choice: ");
-
-                        int choice = int.Parse(Console.ReadLine());
-
-                        string activity = choice switch
-                        {
-                            1 => "Movie",
-                            2 => "Sport",
-                            3 => "Board Games",
-                            4 => "Console Games",
-                            _ => throw new Exception("Invalid activity choice.")
-                        };
-
-                        if (!activities.Any(a => a.Name == activity))
-                            activities.Add(new ActivityDto { Name = activity });
-
-                        Console.Write("Add more activities? (y/n): ");
-                        if (Console.ReadLine()?.ToLower() != "y")
-                            break;
-                    }
-                }
-
-                await bookingService.CreateBookingAsync(new BookingDto
+                await bookingClient.CreateBookingAsync(new BookingDto
                 {
                     RoomId = roomId,
                     StartTime = start,
@@ -129,13 +98,15 @@ namespace AntiCafe.PL.Menu
                 Console.Write("Enter Booking Id to update: ");
                 int id = int.Parse(Console.ReadLine());
 
-                var existing = await bookingService.GetByIdAsync(id);
+                var existing = await bookingClient.GetByIdAsync(id);
 
                 if (existing == null)
                 {
                     Console.WriteLine("Booking not found.");
                     return;
                 }
+
+                Console.WriteLine($"Current booking: {existing.StartTime} - {existing.EndTime}");
 
                 Console.Write("New Start (yyyy-MM-dd HH:mm): ");
                 DateTime start = DateTime.Parse(Console.ReadLine());
@@ -146,40 +117,9 @@ namespace AntiCafe.PL.Menu
                 Console.Write("Full service? (y/n): ");
                 bool isFullService = Console.ReadLine()?.ToLower() == "y";
 
-                var activities = new List<ActivityDto>();
+                var activities = isFullService ? new List<ActivityDto>() : ChooseActivities(); 
 
-                if (!isFullService)
-                {
-                    while (true)
-                    {
-                        Console.WriteLine("\nChoose activity:");
-                        Console.WriteLine("1. Movie");
-                        Console.WriteLine("2. Sport");
-                        Console.WriteLine("3. Board Games");
-                        Console.WriteLine("4. Console Games");
-                        Console.Write("Your choice: ");
-
-                        int choice = int.Parse(Console.ReadLine());
-
-                        string activity = choice switch
-                        {
-                            1 => "Movie",
-                            2 => "Sport",
-                            3 => "Board Games",
-                            4 => "Console Games",
-                            _ => throw new Exception("Invalid activity choice.")
-                        };
-
-                        if (!activities.Any(a => a.Name == activity))
-                            activities.Add(new ActivityDto { Name = activity });
-
-                        Console.Write("Add more activities? (y/n): ");
-                        if (Console.ReadLine()?.ToLower() != "y")
-                            break;
-                    }
-                }
-
-                await bookingService.UpdateBookingAsync(id, new BookingDto
+                await bookingClient.UpdateBookingAsync(id, new BookingDto
                 {
                     RoomId = existing.RoomId,
                     StartTime = start,
@@ -203,7 +143,7 @@ namespace AntiCafe.PL.Menu
                 Console.Write("Enter Booking Id to delete: ");
                 int id = int.Parse(Console.ReadLine());
 
-                await bookingService.DeleteBookingAsync(id);
+                await bookingClient.DeleteBookingAsync(id);
 
                 Console.WriteLine("Booking deleted successfully!");
             }
@@ -215,10 +155,45 @@ namespace AntiCafe.PL.Menu
 
         public async Task ShowActivities()
         {
-            var activities = await activityService.GetAllActivitiesAsync();
+            var activities = await activityClient.GetAllActivitiesAsync();
             Console.WriteLine("\nAvaliable activities in the Anti Cafe:");
             foreach (var a in activities)
                 Console.WriteLine($"{a.Id}. {a.Name}");
+        }
+
+        private List<ActivityDto> ChooseActivities()
+        {
+            var activities = new List<ActivityDto>();
+
+            while (true)
+            {
+                Console.WriteLine("\nChoose activity:");
+                Console.WriteLine("1. Movie");
+                Console.WriteLine("2. Sport");
+                Console.WriteLine("3. Board Games");
+                Console.WriteLine("4. Console Games");
+                Console.Write("Your choice: ");
+
+                int choice = int.Parse(Console.ReadLine());
+
+                string activity = choice switch
+                {
+                    1 => "Movie",
+                    2 => "Sport",
+                    3 => "Board Games",
+                    4 => "Console Games",
+                    _ => throw new Exception("Invalid activity choice.")
+                };
+
+                if (!activities.Any(a => a.Name == activity))
+                    activities.Add(new ActivityDto { Name = activity });
+
+                Console.Write("Add more activities? (y/n): ");
+                if (Console.ReadLine()?.ToLower() != "y")
+                    break;
+            }
+
+            return activities;
         }
     }
 }

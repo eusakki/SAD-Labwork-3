@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.DAL", "AntiCafe.DA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.WebAPI", "AntiCafe.WebAPI\AntiCafe.WebAPI.csproj", "{C91D55B5-7DDE-4AFE-8910-87E1473293D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiCafe.Contracts", "AntiCafe.Contracts\AntiCafe.Contracts.csproj", "{F848C9C8-967C-4381-A524-CB101AEB5277}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C91D55B5-7DDE-4AFE-8910-87E1473293D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C91D55B5-7DDE-4AFE-8910-87E1473293D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C91D55B5-7DDE-4AFE-8910-87E1473293D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F848C9C8-967C-4381-A524-CB101AEB5277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F848C9C8-967C-4381-A524-CB101AEB5277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F848C9C8-967C-4381-A524-CB101AEB5277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F848C9C8-967C-4381-A524-CB101AEB5277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

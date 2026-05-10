@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using AntiCafe.BLL.Interfaces;
-using AntiCafe.BLL.DTOs;
+using AntiCafe.Contracts.DTOs;
 
 namespace AntiCafe.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/bookings")]
     public class BookingController : ControllerBase
     {
         private readonly IBookingService bookingService;

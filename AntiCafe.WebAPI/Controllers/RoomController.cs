@@ -5,7 +5,7 @@ using AntiCafe.BLL.Interfaces;
 namespace AntiCafe.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/rooms")]
     public class RoomController : ControllerBase
     {
         private readonly IRoomService roomService;
