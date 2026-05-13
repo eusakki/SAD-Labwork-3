@@ -45,6 +45,45 @@ namespace AntiCafe.DAL.Data
                 }
             });
 
+            await uow.Bookings.AddAsync(new Booking
+            {
+                RoomId = 1,
+                StartTime = DateTime.Now.AddHours(3),
+                EndTime = DateTime.Now.AddHours(5),
+                IsFullService = true,
+                Activities = new List<Activity>() 
+                {
+                    sport,
+                    console,
+                    boardGames
+                }
+            });
+
+            await uow.Bookings.AddAsync(new Booking
+            {
+                RoomId = 2,
+                StartTime = DateTime.Now.AddHours(4),
+                EndTime = DateTime.Now.AddHours(6),
+                IsFullService = false,
+                Activities = new List<Activity>()
+                {
+                    boardGames,
+                    movie
+                }
+            });
+
+            await uow.Bookings.AddAsync(new Booking
+            {
+                RoomId = 3,
+                StartTime = DateTime.Now.AddHours(2),
+                EndTime = DateTime.Now.AddHours(4),
+                IsFullService = false,
+                Activities = new List<Activity>()
+                {
+                    movie,
+                }
+            });
+
             await uow.SaveAsync();
         }
     }

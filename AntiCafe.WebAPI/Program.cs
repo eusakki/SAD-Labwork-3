@@ -30,6 +30,10 @@ builder.Host.ConfigureContainer<ContainerBuilder>(container =>
 builder.Services.AddDbContext<AntiCafeDbContext>(opt =>
     opt.UseInMemoryDatabase("AntiCafeDB"));
 
+// Configure Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // AutoMapper configuration
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -43,6 +47,12 @@ using (var scope = app.Services.CreateScope())
 {
     var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     await DataSeeder.SeedAsync(uow);
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.MapControllers();

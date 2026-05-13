@@ -81,6 +81,7 @@ namespace AntiCafe.BLL.Services
         {
             var bookings = await context.Bookings
                 .Include(b => b.Activities)
+                .OrderBy(b => b.Id)
                 .ToListAsync();
 
             return mapper.Map<IEnumerable<BookingDto>>(bookings);
@@ -153,6 +154,7 @@ namespace AntiCafe.BLL.Services
                 }
             }
 
+            uow.Bookings.Update(entity);
             await uow.SaveAsync();
         }
 
